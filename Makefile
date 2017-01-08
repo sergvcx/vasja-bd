@@ -1,0 +1,2 @@
+go:
+	casperjs badoo.js
