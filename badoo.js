@@ -292,6 +292,7 @@ casper.then(function() {
 					else {
 						this.capture('Hren='+count+'.png');
 						this.echo('У вас какая то хрень='+count);
+						fs.write('ERROR-hren.html', this.getHTML() , 'w');
 						this.click('i.icon.icon--white.js-ovl-close');
 					}
 				},
@@ -332,7 +333,9 @@ casper.then(function() {
 					}
 					else {
 						this.capture('Hren='+count+'.png');
-						this.echo('У вас какая то хрень 2='+count);
+						this.echo('У вас какая то супер хрень 2='+count);
+						fs.write('ERROR-hren.html', this.getHTML() , 'w');
+						this.click('i.icon.icon--grey.js-ovl-close');
 					}
 				},
 				function() {

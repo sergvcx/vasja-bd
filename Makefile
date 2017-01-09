@@ -1,2 +1,2 @@
 go:
-	casperjs badoo.js
+	del *.png && casperjs badoo.js
