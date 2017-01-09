@@ -6,6 +6,7 @@ var username=json['username'];
 var password=json['password'];
 var minratio=json['minratio'];
 var lastindx=json['lastindx'];
+var unrated =json['unrated'];
 
 var fs     = require('fs');
 
@@ -15,6 +16,7 @@ function saveJSON(){
 	jsonStr+= '"username":"'+username+"\",\n";
 	jsonStr+= '"password":"'+password+"\",\n";
 	jsonStr+= '"minratio":'+minratio+",\n";
+	jsonStr+= '"unrated":'+unrated+",\n";
 	jsonStr+= '"lastindx":'+lastindx+" \n";
 	jsonStr+= '}';
 	fs.write('badoo.json', jsonStr, 'w');
@@ -186,12 +188,12 @@ casper.then(function() {
 						rating=this.fetchText('b.scale-value.no-dps').replace(",",".");
 						this.echo('Rating= '+rating);
 						if (rating==""){
-							rating="10";
+							rating=unrated; // 10
 						}
 					},
 					function(){
 						//this.capture('badoo='+count+'-profileNo.png');
-						rating="10";
+						rating=unrated;//"10";
 						this.echo("No rating");
 						//this.capture("profile_fail="+count+".png");
 					},
@@ -249,67 +251,73 @@ casper.then(function() {
 			//this.waitWhileVisible('div.ovl-frame.js-ovl-wrap', 
 			
 			// Пусть вас видят чаще
-			this.waitForSelector('span.p-link.js-ovl-close', 
-				function(){
-					this.echo('span.p-link.js-ovl-close SELECTOR='+count);	
-					if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
-						this.echo('Нет, спасибо='+count);	
-						this.click('span.p-link.js-ovl-close');
-					}
-				},
-				function() {
-					this.echo('No 3000='+count);
-				},
-				3000
-			);
+			//this.waitForSelector('span.p-link.js-ovl-close', 
+			//	function(){
+			//		this.echo('span.p-link.js-ovl-close SELECTOR='+count);	
+			//		if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
+			//			this.echo('Нет, спасибо='+count);	
+			//			this.click('span.p-link.js-ovl-close');
+			//		}
+			//	},
+			//	function() {
+			//		this.echo('No 3000='+count);
+			//	},
+			//	3000
+			//);
 			
 			// <i class="icon icon--white js-ovl-close">  [Close icon]
-			this.waitForSelector('i.icon.icon--white.js-ovl-close', 
-				function () {
-					this.echo('[SELECTOR] i.icon.icon--white.js-ovl-close ='+count);	
-					if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
-						--count;
-						this.echo('У вас закончились голоса='+count);	
-						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						novoice=true;
-						
-						this.wait(600000,
-							function(){	
-								this.click('i.icon.icon--white.js-ovl-close');
-							}
-						);
-					}
-					// <h1>Повысьте свои шансы!</h1>
-					else if (this.exists(x('//h1[text()="Повысьте свои шансы!"]'))) {
-						this.echo('Повысьте свои шансы! ='+count);	
-						this.click('i.icon.icon--white.js-ovl-close');
-					}
-					else if (this.exists(x('//h1[text()="Нравится Badoo?"]'))) {
-						this.capture('Nra='+count+'.png');
-						this.echo('Нравится Badoo! ='+count);	
-						this.click('i.icon.icon--white.js-ovl-close');
-					}
-					else {
-						this.capture('Hren='+count+'.png');
-						this.echo('У вас какая то хрень='+count);
-						fs.write('ERROR-hren.html', this.getHTML() , 'w');
-						this.click('i.icon.icon--white.js-ovl-close');
-					}
-				},
-				function() {
-					this.echo('No 3001='+count);
-				},
-				3001
-			);
+			//this.waitForSelector('i.icon.icon--white.js-ovl-close', 
+			//	function () {
+			//		this.echo('[SELECTOR] i.icon.icon--white.js-ovl-close ='+count);	
+			//		if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
+			//			--count;
+			//			this.echo('У вас закончились голоса='+count);	
+			//			this.echo('ZZZzzzzz....10 min, --count='+count);	
+			//			novoice=true;
+			//			
+			//			this.wait(600000,
+			//				function(){	
+			//					this.click('i.icon.icon--white.js-ovl-close');
+			//				}
+			//			);
+			//		}
+			//		// <h1>Повысьте свои шансы!</h1>
+			//		else if (this.exists(x('//h1[text()="Повысьте свои шансы!"]'))) {
+			//			this.echo('Повысьте свои шансы! ='+count);	
+			//			this.click('i.icon.icon--white.js-ovl-close');
+			//		}
+			//		else if (this.exists(x('//h1[text()="Нравится Badoo?"]'))) {
+			//			this.capture('Nra='+count+'.png');
+			//			this.echo('Нравится Badoo! ='+count);	
+			//			this.click('i.icon.icon--white.js-ovl-close');
+			//		}
+			//		else {
+			//			this.capture('Hren='+count+'.png');
+			//			this.echo('У вас какая то хрень='+count);
+			//			fs.write('ERROR-hren.html', this.getHTML() , 'w');
+			//			this.click('i.icon.icon--white.js-ovl-close');
+			//		}
+			//	},
+			//	function() {
+			//		this.echo('No 3001='+count);
+			//	},
+			//	3001
+			//);
 			
 			this.waitForSelector('div.ovl-frame.js-ovl-wrap',
 				function() {
-					this.echo('[SELECTOR] div.ovl-frame.js-ovl-wrap ='+count);	
+					// Пусть вас видят чаще
+					//this.echo('[SELECTOR] div.ovl-frame.js-ovl-wrap ='+count);	
+					//if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
+					//	--count;
+					//	this.echo('Нет, спасибо='+count);	
+					//	this.click('span.p-link.js-ovl-close');
+					//}
 					if (this.exists(x('//p[text()="Этот аккаунт используется на другом устройстве."]'))) {
 						--count;
 						this.echo('Этот аккаунт используется на другом устройстве.='+count);	
 						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						novoice=true;
+						//novoice=true;
 						
 						this.wait(600000,
 							function(){	
@@ -322,7 +330,7 @@ casper.then(function() {
 						--count;
 						this.echo('Время сеанса истекло. Пожалуйста, выполните вход ещё раз.'+count);	
 						this.echo('ZZZzzzzz....1 min, --count='+count);	
-						novoice=true;
+						//novoice=true;
 						
 						this.wait(60000,
 							function(){	
@@ -331,12 +339,35 @@ casper.then(function() {
 							}
 						);
 					}
-					else {
-						this.capture('Hren='+count+'.png');
-						this.echo('У вас какая то супер хрень 2='+count);
-						fs.write('ERROR-hren.html', this.getHTML() , 'w');
-						this.click('i.icon.icon--grey.js-ovl-close');
+					else if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
+						--count;
+						this.echo('У вас закончились голоса='+count);	
+						this.echo('ZZZzzzzz....10 min, --count='+count);	
+						//novoice=true;
+						
+						this.wait(600000,
+							function(){	
+								this.click('i.icon.icon--white.js-ovl-close');
+							}
+						);
 					}
+					else {
+						// Повысьте свои шансы!
+						// Нравится Badoo?
+						// О Да! Это взаимно :)
+						this.capture('Hren='+count+'.png');
+						this.echo('Какая то хрень ='+count);
+						fs.write('ERROR-hren.html', this.getHTML() , 'w');
+						if (this.exists('i.icon.icon--white.js-ovl-close')) {
+							this.click ('i.icon.icon--white.js-ovl-close');
+						} 
+						else if (this.exists('i.icon.icon--grey.js-ovl-close')){
+							this.click      ('i.icon.icon--grey.js-ovl-close');
+						}
+						else {
+							this.echo('И эта хрень неизличима');
+						}
+					}	
 				},
 				function() {
 					
@@ -351,7 +382,7 @@ casper.then(function() {
 					this.wait(2000,function(){'Sleep after disapeared'});
 				},
 				function() {
-					this.echo('[PROBLEM]: Overlay dows not disapeared!',+count);
+					this.echo('[PROBLEM]: А херня не исчезает!',+count);
 					this.capture('Error10='+count+'.png');
 				},
 				10000
