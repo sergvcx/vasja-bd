@@ -243,82 +243,14 @@ casper.then(function() {
 			});
 		}
 		else {
-		//this.waitForSelector('div.ovl-frame.js-ovl-wrap', 
 			this.echo('Overlay detected='+count);	
 			this.capture('Overlay10='+count+'.png');
-			//this.capture('Overlay11='+count+'.png');
-			//this.capture('Overlay12='+count+'.png');
-			//this.waitWhileVisible('div.ovl-frame.js-ovl-wrap', 
-			
-			// Пусть вас видят чаще
-			//this.waitForSelector('span.p-link.js-ovl-close', 
-			//	function(){
-			//		this.echo('span.p-link.js-ovl-close SELECTOR='+count);	
-			//		if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
-			//			this.echo('Нет, спасибо='+count);	
-			//			this.click('span.p-link.js-ovl-close');
-			//		}
-			//	},
-			//	function() {
-			//		this.echo('No 3000='+count);
-			//	},
-			//	3000
-			//);
-			
-			// <i class="icon icon--white js-ovl-close">  [Close icon]
-			//this.waitForSelector('i.icon.icon--white.js-ovl-close', 
-			//	function () {
-			//		this.echo('[SELECTOR] i.icon.icon--white.js-ovl-close ='+count);	
-			//		if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
-			//			--count;
-			//			this.echo('У вас закончились голоса='+count);	
-			//			this.echo('ZZZzzzzz....10 min, --count='+count);	
-			//			novoice=true;
-			//			
-			//			this.wait(600000,
-			//				function(){	
-			//					this.click('i.icon.icon--white.js-ovl-close');
-			//				}
-			//			);
-			//		}
-			//		// <h1>Повысьте свои шансы!</h1>
-			//		else if (this.exists(x('//h1[text()="Повысьте свои шансы!"]'))) {
-			//			this.echo('Повысьте свои шансы! ='+count);	
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//		}
-			//		else if (this.exists(x('//h1[text()="Нравится Badoo?"]'))) {
-			//			this.capture('Nra='+count+'.png');
-			//			this.echo('Нравится Badoo! ='+count);	
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//		}
-			//		else {
-			//			this.capture('Hren='+count+'.png');
-			//			this.echo('У вас какая то хрень='+count);
-			//			fs.write('ERROR-hren.html', this.getHTML() , 'w');
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//		}
-			//	},
-			//	function() {
-			//		this.echo('No 3001='+count);
-			//	},
-			//	3001
-			//);
-			
 			this.waitForSelector('div.ovl-frame.js-ovl-wrap',
 				function() {
-					// Пусть вас видят чаще
-					//this.echo('[SELECTOR] div.ovl-frame.js-ovl-wrap ='+count);	
-					//if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
-					//	--count;
-					//	this.echo('Нет, спасибо='+count);	
-					//	this.click('span.p-link.js-ovl-close');
-					//}
 					if (this.exists(x('//p[text()="Этот аккаунт используется на другом устройстве."]'))) {
 						--count;
 						this.echo('Этот аккаунт используется на другом устройстве.='+count);	
 						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						//novoice=true;
-						
 						this.wait(600000,
 							function(){	
 								this.echo('Жмем продолжить...');	
@@ -339,17 +271,21 @@ casper.then(function() {
 							}
 						);
 					}
+					//if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
 					else if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
 						--count;
 						this.echo('У вас закончились голоса='+count);	
 						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						//novoice=true;
-						
 						this.wait(600000,
 							function(){	
 								this.click('i.icon.icon--white.js-ovl-close');
 							}
 						);
+					}
+					else if (this.exists(x('//h1[text()="Пусть вас видят чаще"]'))) {
+						--count;
+						this.echo('Пусть вас видят чаще='+count);	
+						this.click('span.p-link.js-ovl-close');
 					}
 					else {
 						// Повысьте свои шансы!
@@ -357,7 +293,6 @@ casper.then(function() {
 						// О Да! Это взаимно :)
 						this.capture('Hren='+count+'.png');
 						this.echo('Какая то хрень ='+count);
-						fs.write('ERROR-hren.html', this.getHTML() , 'w');
 						if (this.exists('i.icon.icon--white.js-ovl-close')) {
 							this.click ('i.icon.icon--white.js-ovl-close');
 						} 
@@ -365,7 +300,8 @@ casper.then(function() {
 							this.click      ('i.icon.icon--grey.js-ovl-close');
 						}
 						else {
-							this.echo('И эта хрень неизличима');
+							fs.write('ERROR-hren.html', this.getHTML() , 'w');
+							this.echo('И эта хрень неизличима! See ERROR-hren.html');
 						}
 					}	
 				},
