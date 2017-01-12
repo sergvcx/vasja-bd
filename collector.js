@@ -1,4 +1,13 @@
 phantom.injectJs('settings.js');
+
+var json = require('badoo.json');
+//require('utils').dump(json);
+var username=json['username'];
+var password=json['password'];
+var minratio=json['minratio'];
+var lastindx=json['lastindx'];
+
+
 //var casper = require('casper').create();
 
 
@@ -54,7 +63,7 @@ casper.then(function Login() {
 	this.waitForSelector('form.no_autoloader.form.js-signin', function(){
 		this.echo('form is dettected');
 		this.fill('form', {
-			'email': email, 
+			'email': username, 
 			'password': password},
 			true);
 		this.echo('form is filled');
