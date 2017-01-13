@@ -7,10 +7,11 @@ var password=json['password'];
 var minratio=json['minratio'];
 var lastindx=json['lastindx'];
 var unrated =json['unrated'];
+var dbminratio=json['dbminratio'];
 
 
 //var casper = require('casper').create();
-
+var urls={}
 
 var casper = require('casper').create({
   verbose: true,
@@ -176,6 +177,16 @@ casper.then(function CollectPeople() {
 			//<span class="profile-section__txt">Только живое общение. Дублирую еще раз: Если Вы не готовы к общению вне сайта, писать мне совершенно не стоит) Только русские. Выше 184 см) (Без обид, мой рост 180) P. S. Не нужно придумывать, что Вы из Москвы, если находитесь в Пскове и утверждать, что Ваш Range Rover разбился вчера "под списание". Если Вы не знаете, где находится Моховая, Никитская или произносите ЦАО с ударением на последнюю букву, а еще искажаете звук "г" и продолжаете утверждать, что Вы-житель столицы, закройте этот профиль)))) Закончила МГИМО, учусь в аспирантуре МГУ, люблю охоту, спорт, Петербург, Сочи, квадрики, литературу, рамные автомобили, гироскутер, путешествия и основную сцену Александринки☺ Не люблю пафос, а также ложь и хитрость. ☺Остальное в Инста: Fourth_estate</span>
 			var info =this.fetchText('span.profile-section__txt').replace(/&/g,"*").replace(/"/g,"'");
 
+			profile = url.replace()
+			for (pro in profiles ){
+				if 
+				
+				
+			}
+			
+			
+			
+			profiles[]
 			if (score>minratio){
 				fs.write(xmlfile,'<girl img="'+imgPreview+'"  name="'+name+'"  age="'+age+'" score="'+score+'" url="'+url+'" want="'+want+'">\n','a');
 				fs.write(xmlfile,info,'a');
