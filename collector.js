@@ -1,4 +1,4 @@
-phantom.injectJs('settings.js');
+//phantom.injectJs('settings.js');
 
 var json = require('badoo.json');
 //require('utils').dump(json);
@@ -6,6 +6,7 @@ var username=json['username'];
 var password=json['password'];
 var minratio=json['minratio'];
 var lastindx=json['lastindx'];
+var unrated =json['unrated'];
 
 
 //var casper = require('casper').create();
@@ -164,7 +165,7 @@ casper.then(function CollectPeople() {
 			
 			var score=this.getElementAttribute('div.scale.scale--sm.js-profile-score','data-score');
 			if (score==null){
-				score="10";
+				score=unrated;
 			}
 
 			this.echo(score);
@@ -175,7 +176,7 @@ casper.then(function CollectPeople() {
 			//<span class="profile-section__txt">Только живое общение. Дублирую еще раз: Если Вы не готовы к общению вне сайта, писать мне совершенно не стоит) Только русские. Выше 184 см) (Без обид, мой рост 180) P. S. Не нужно придумывать, что Вы из Москвы, если находитесь в Пскове и утверждать, что Ваш Range Rover разбился вчера "под списание". Если Вы не знаете, где находится Моховая, Никитская или произносите ЦАО с ударением на последнюю букву, а еще искажаете звук "г" и продолжаете утверждать, что Вы-житель столицы, закройте этот профиль)))) Закончила МГИМО, учусь в аспирантуре МГУ, люблю охоту, спорт, Петербург, Сочи, квадрики, литературу, рамные автомобили, гироскутер, путешествия и основную сцену Александринки☺ Не люблю пафос, а также ложь и хитрость. ☺Остальное в Инста: Fourth_estate</span>
 			var info =this.fetchText('span.profile-section__txt').replace(/&/g,"*").replace(/"/g,"'");
 
-			if (score>6.2){
+			if (score>minratio){
 				fs.write(xmlfile,'<girl img="'+imgPreview+'"  name="'+name+'"  age="'+age+'" score="'+score+'" url="'+url+'" want="'+want+'">\n','a');
 				fs.write(xmlfile,info,'a');
 				fs.write(xmlfile,'</girl>\n','a');
