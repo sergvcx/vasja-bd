@@ -52,70 +52,52 @@ casper.then(function() {
 
 
 
-casper.then(function() {
-	//this.echo('[01] Waiting for login...');
-	this.capture('badoo-10.png');
-	//*[@id="anketa"]
-	//test.assertExists('form[id="anketa"]', "main form is found");
-	//this.fill('form[id="anketa"]', {
-    //    dlg_login_log: "qwe",
-    //     dlg_login_pas: "qwe"
-    // }, true);
-	 
-	//this.fillSelectors('form#user-login', {
-    //    'input[name = name ]' : 'abc@gmail.com',
-    //    'input[name = pass ]' : 'pwd'
-    //}, true);
-	//this.waitForSelector("form input[name='login']", function() {
-	//	this.fillSelectors('form#user-login', {
-	//		'input[name = login]' : 'abc@gmail.com',
-	//		'input[name = password ]' : 'pwd'
-    //}, true);
-	//casper.waitForSelector('form', function(){
-	//	this.fill('form', {
-	//		'login': 'abc@gmail.com', 
-	//		'password': 'pwd'},
-	//		true);
-	//});
-	//this.echo('I am out of selector');
-	
+casper.then(function login() {
+	this.capture('badoo-10.png');	
 	
 	this.waitForSelector('form', function(){
 		this.fill('form.no_autoloader.form.js-signin', {
 			'email': username, 
 			'password': password},
 			true);
+			
+		//this.evaluate(function () {
+		//	$('form.no_autoloader.form.js-signin').submit();
+		//});
+	
 	});
 		
+	
+	
 	this.capture('badoo-11.png');
-	
-	//this.click('input.button.login');
-	
-	//#dlg_login > ul.reset.line.lab_w43 > li:nth-child(4) > div > button
-	
-	
 });
 
 casper.then(function() {
-	this.echo('submit');
+//	this.echo('submit');
 	this.evaluate(function () {
-        $('form.no_autoloader.form.js-signin').submit();
-    });
-	
-	
+       $('form.no_autoloader.form.js-signin').submit();
+   });
+//	
+//	
 	this.capture('badoo-20.png');
-
+//
 });	
 
 casper.then(function() {
 	
 	//body > div.height_full > div.head > div > ul > li:nth-child(1) > a
-	
-	this.echo('preexit');
-	this.wait(10000,function(){
-		this.echo('exit');
-		this.capture('badoo-exit.png');
-	});
+	//b-link js-profile-header-vote
+	//this.waitUntilVisible('div.big-photo__gallery1',function(){
+	this.waitForSelector('div.page.with-side-footer',function(){
+		this.echo('Ready');
+		//this.wait(10000,function(){
+		//this.echo('exit');
+		this.capture('badoo-01-ready.png');
+	},function(){
+		this.echo('Error Login');
+		this.capture('badoo-00-error.png');
+		this.exit();
+	},10000);
 	//this.waitForSelector('div.height_full', function(){
 	//	this.echo('exit');
 	//	this.capture('badoo-30.png');
@@ -127,7 +109,7 @@ casper.then(function() {
 	var x = require('casper').selectXPath;
 	this.echo('..');
 	//this.waitTimeOut(2000);
-	var novoice=false;
+	//var novoice=false;
 	this.repeat(numTimes, function() {
 		this.echo('----------- count='+count);
 		if (!this.exists('html.js.safari.ovl-fading')){
@@ -174,8 +156,13 @@ casper.then(function() {
 						}
 						++count;
 						var timeToSleep=10000;
-						if (count%10==0){
-							timeToSleep=10000*100;	
+						if (count%5==0){
+							//timeToSleep=10000*100;	
+							this.echo('Logout');
+							//this.echo('buy');
+							//this.exit();
+							this.click('span.b-link.js-signout-overlay');
+							
 						}
 						this.echo(timeToSleep/1000+' sec Zzzzzzz...');
 						this.wait(timeToSleep,function(){
