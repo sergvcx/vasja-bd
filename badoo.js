@@ -1,5 +1,6 @@
 //phantom.injectJs('settings.js');
 var casper = require('casper').create();
+var mouse = require('mouse').create(casper);
 var json = require('badoo.json');
 //require('utils').dump(json);
 var username=json['username'];
@@ -50,72 +51,25 @@ casper.then(function() {
 });
 
 
+function log(){
+	
+	this.echo('sdfdsfsdf');
+}
 
-
-casper.then(function login() {
-	this.capture('badoo-10.png');	
-	
-	this.waitForSelector('form', function(){
-		this.fill('form.no_autoloader.form.js-signin', {
-			'email': username, 
-			'password': password},
-			true);
-			
-		//this.evaluate(function () {
-		//	$('form.no_autoloader.form.js-signin').submit();
-		//});
-	
-	});
-		
-	
-	
-	this.capture('badoo-11.png');
-});
-
-casper.then(function() {
-//	this.echo('submit');
-	this.evaluate(function () {
-       $('form.no_autoloader.form.js-signin').submit();
-   });
-//	
-//	
-	this.capture('badoo-20.png');
-//
-});	
-
-casper.then(function() {
-	
-	//body > div.height_full > div.head > div > ul > li:nth-child(1) > a
-	//b-link js-profile-header-vote
-	//this.waitUntilVisible('div.big-photo__gallery1',function(){
-	this.waitForSelector('div.page.with-side-footer',function(){
-		this.echo('Ready');
-		//this.wait(10000,function(){
-		//this.echo('exit');
-		this.capture('badoo-01-ready.png');
-	},function(){
-		this.echo('Error Login');
-		this.capture('badoo-00-error.png');
-		this.exit();
-	},10000);
-	//this.waitForSelector('div.height_full', function(){
-	//	this.echo('exit');
-	//	this.capture('badoo-30.png');
-	//});
-});	
+//casper.then(function waitLogined() {
+	//this.waitForSelector('div.page.with-side-footer',function(){
+//});	
 
 casper.then(function() {
 	var numTimes = 5000, count = lastindx+1;
 	var x = require('casper').selectXPath;
-	this.echo('..');
-	//this.waitTimeOut(2000);
-	//var novoice=false;
+	this.echo('Starting..');
 	this.repeat(numTimes, function() {
 		this.echo('----------- count='+count);
 		if (!this.exists('html.js.safari.ovl-fading')){
 			var rating="0";
 			//this.echo("Enter profile...");
-			this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function(){
+			var relogined = this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function intoProfile(){
 				//this.echo('click profile');
 				this.click('span.b-link.js-profile-header-toggle-layout');
 				//this.echo('Whaiting for profile...');
@@ -136,7 +90,53 @@ casper.then(function() {
 					},
 					5000
 				);
-			});
+				return false;
+			},	function login() {
+					casper.echo('Login...');	
+					this.capture('badoo-10.png');	
+					this.waitForSelector('a.btn.btn--sm.btn--white',function(){
+						this.click('a.btn.btn--sm.btn--white');	// Жмем "Войти"
+					}, function(){
+						this.echo('First')
+					}
+					);
+					
+	
+					this.waitForSelector('form', function(){
+						this.echo('Authorization...');	
+						this.fill('form.no_autoloader.form.js-signin', {
+							'email': username, 
+							'password': password},
+							true);
+							
+						this.evaluate(function () {
+							$('form.no_autoloader.form.js-signin').submit();
+						});
+					
+					},function(){
+						this.echo('Error: login page not found');
+						this.capture('badoo-00-error.png');
+						this.exit();
+					});
+						
+					this.waitUntilVisible('div.big-photo__gallery',function(){
+						this.echo('Ready');
+						this.capture('badoo-01-ready.png');
+					},function(){
+						this.echo('Error Login');
+						this.capture('badoo-00-error.png');
+						this.exit();
+					},15000);
+					
+					this.capture('badoo-11.png');
+					return true;
+			},
+			6000
+
+				//this.evaluate(login);
+				//waitLogined();
+				
+			);
 			this.then(function(){
 				this.echo("rating="+rating);
 				//this.echo("profile_OK");
@@ -161,8 +161,13 @@ casper.then(function() {
 							this.echo('Logout');
 							//this.echo('buy');
 							//this.exit();
-							this.click('span.b-link.js-signout-overlay');
-							
+							//this.click('i.icon.icon--grey.sidebar__el-hidden.sidebar-nav__signout');
+							this.mouse.move('div.brick.brick--hover');
+							this.waitUntilVisible('span.b-link.js-signout-overlay', function(){
+								this.echo('visible')
+								this.click('span.b-link.js-signout-overlay');
+							});
+
 						}
 						this.echo(timeToSleep/1000+' sec Zzzzzzz...');
 						this.wait(timeToSleep,function(){
@@ -176,6 +181,7 @@ casper.then(function() {
 				);
 			});
 		}
+		// Если есть оверлей
 		else {
 			this.echo('Overlay detected='+count);	
 			this.capture('Overlay10='+count+'.png');
@@ -220,6 +226,11 @@ casper.then(function() {
 						--count;
 						this.echo('Пусть вас видят чаще='+count);	
 						this.click('span.p-link.js-ovl-close');
+					}
+					else if (this.exists(x('//p[text()="Вы действительно хотите выйти?"]'))) {
+						//--count;
+						this.echo('Вы действительно хотите выйти?='+count);	
+						this.click('span.b-link.js-signout-immediately');
 					}
 					else {
 						// Повысьте свои шансы!
