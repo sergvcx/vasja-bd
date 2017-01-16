@@ -3,5 +3,6 @@
 "password":"",
 "minratio":6.4,
 "unrated":6,
-"lastindx":1 
+"lastindx":3000,
+"dbminratio":6
 }
