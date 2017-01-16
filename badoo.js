@@ -11,7 +11,7 @@ var unrated =json['unrated'];
 var fs     = require('fs');
 
 function saveJSON(){
-	casper.echo('save to JSON...');
+	//casper.echo('save to JSON...');
 	var jsonStr = "{\n";
 	jsonStr+= '"username":"'+username+"\",\n";
 	jsonStr+= '"password":"'+password+"\",\n";
@@ -53,7 +53,7 @@ casper.then(function() {
 
 
 casper.then(function() {
-	this.echo('[01] Waiting for login...');
+	//this.echo('[01] Waiting for login...');
 	this.capture('badoo-10.png');
 	//*[@id="anketa"]
 	//test.assertExists('form[id="anketa"]', "main form is found");
@@ -129,64 +129,19 @@ casper.then(function() {
 	//this.waitTimeOut(2000);
 	var novoice=false;
 	this.repeat(numTimes, function() {
-		//this.echo('.');
-		
-		//this.wait(1000,function(){
-			//this.echo('wait for love..');
-			
-			//#mm_cc > section > div.big-photo__gallery > div > section > div
-			//this.waitWhileVisible('span.b-link.js-profile-header-vote', 
-			//function(){
-				//this.waitForSelector('div.big-photo__gallery', function(){
-				//----------- Ловим overlay ------------
-				//<div class="ovl-frame js-ovl-wrap"> top level
-				//this.waitForSelector('div.ovl-frame.js-ovl-wrap', function(){
-				//	this.echo('Overlay detected='+count);	
-				//});
-				//if (this.exists('div.ovl-frame.js-ovl-wrap')){
-				//<html lang="ru" dir="ltr" class="js chrome ovl-fading ovl-opened">
-				//<div class="ovl-frame js-ovl-wrap">
-		this.echo('-----------');
-		this.echo('count='+count);
-		//if (!this.exists('div.ovl-frame.js-ovl-wrap')){
-			
-		//var fname = 'page='+count+'.html';
-		//fs.write(fname, this.getHTML() , 'w');
-		//if (!this.exists('html.js.safari.ovl-fading')){
-			//if (novoice==false) {
-			//this.echo('I like '+count);
-			//this.capture('badoo='+count+'.png');
-			//var fname = 'page='+count+'.html';
-			//fs.write(fname, this.getHTML() , 'w');
-				//++count;
-			//}
-			//this.echo('I Click yes whitout capture'+count);
-			
-			//novoice=false;
-		//}//}
-		//if (this.exists('html.js.safari.ovl-fading')){
-		//	this.echo('HTML Overlay detected='+count);	
-		//}
-		//if (!this.exists('html.js.safari.ovl-fading')){
-		// проверяем второй раз , что не появился оверлей
-		//if (!this.exists('div.ovl-frame.js-ovl-wrap')){
+		this.echo('----------- count='+count);
 		if (!this.exists('html.js.safari.ovl-fading')){
-			
 			var rating="0";
-			this.echo("Enter profile...");
+			//this.echo("Enter profile...");
 			this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function(){
-				this.echo('click profile');
+				//this.echo('click profile');
 				this.click('span.b-link.js-profile-header-toggle-layout');
-				this.echo('Whaiting for profile...');
-				//this.waitForSelector('div.score-user',function(){
-				//	this.echo("rating");
-				//});
-				//this.waitForSelector('div.score-user',
+				//this.echo('Whaiting for profile...');
 				this.waitForSelector('b.scale-value.no-dps',
 					function(){
 						//this.capture('profile='+count+'-profileYes.png');
 						rating=this.fetchText('b.scale-value.no-dps').replace(",",".");
-						this.echo('Rating= '+rating);
+						//this.echo('Rating= '+rating);
 						if (rating==""){
 							rating=unrated; // 10
 						}
@@ -209,18 +164,6 @@ casper.then(function() {
 				//this.waitForSelector('span.b-link.js-profile-header-vote', 
 				this.waitForSelector('span[class="b-link js-profile-header-vote"]', 
 					function(){
-						//#app_c > div > div.profile__header.js-profile-header-container.js-core-events-container > header > div > div.profile-header__btn.js-profile-header-buttons > div.btn-game.btn-game--hot.js-profile-header-vote-yes.tooltip-wrap
-						//#app_c > div > div.profile__header.js-profile-header-container.js-core-events-container > header > div > div.profile-header__btn.js-profile-header-buttons > div.btn-game.btn-game--hot.js-profile-header-vote-yes.tooltip-wrap > span
-						//<span class="b-link js-profile-header-vote" data-choice="yes"></span>
-						//this.click('div.btn-game.btn-game--hot.js-profile-header-vote-yes.tooltip-wrap.b-link.js-profile-header-vote');
-						
-						
-						//this.click('span.b-link.js-profile-header-vote'); 
-						this.echo(rating);
-						//var x=rating.replace("0","r");
-						//this.echo(x);
-						var s = rating;//"the,batter,hit the ball with the bat";
-		
 						if (parseFloat(rating)>minratio){
 							this.echo("click yes")
 							this.click('span[class="b-link js-profile-header-vote"][data-choice="yes"]');
@@ -230,9 +173,13 @@ casper.then(function() {
 							this.click('span[class="b-link js-profile-header-vote"][data-choice="no"]');
 						}
 						++count;
-						this.echo('10 sec Zzzz...');
-						this.wait(10000,function(){
-							this.echo('Wakeup...');
+						var timeToSleep=10000;
+						if (count%10==0){
+							timeToSleep=10000*100;	
+						}
+						this.echo(timeToSleep/1000+' sec Zzzzzzz...');
+						this.wait(timeToSleep,function(){
+							//this.echo('Wakeup...');
 						});
 					},
 					function(){
@@ -324,7 +271,7 @@ casper.then(function() {
 				10000
 			);
 		}
-		this.echo("End repeat");
+		//this.echo("End repeat");
 		
 	});
 	
