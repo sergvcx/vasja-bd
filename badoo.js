@@ -64,14 +64,16 @@ casper.then(function() {
 	var numTimes = 5000, count = lastindx+1;
 	var x = require('casper').selectXPath;
 	this.echo('Starting..');
+	
 	this.repeat(numTimes, function() {
 		this.echo('----------- count='+count);
 		if (!this.exists('html.js.safari.ovl-fading')){
+			continue;
 			var rating="0";
-			//this.echo("Enter profile...");
+			this.echo("Enter profile...");
 			var relogined = this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function intoProfile(){
 				//this.echo('click profile');
-				this.click('span.b-link.js-profile-header-toggle-layout');
+				this.click('span.b-link.js-profile-header-toggle-layout');	// Заходим в профайл
 				//this.echo('Whaiting for profile...');
 				this.waitForSelector('b.scale-value.no-dps',
 					function(){
@@ -137,6 +139,8 @@ casper.then(function() {
 				//waitLogined();
 				
 			);
+			if (relogined) continue;
+			
 			this.then(function(){
 				this.echo("rating="+rating);
 				//this.echo("profile_OK");
