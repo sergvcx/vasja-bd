@@ -38,331 +38,135 @@ casper.start('http://badoo.com', function() {
 	this.capture('badoo-start.png');
 });
 
-
-
-casper.then(function() {
-	this.capture('badoo-00.png');
-	this.click('a.btn.btn--sm.btn--white');
-	this.capture('badoo-01.png');
-	
-	//lastindx+=1;
-	//saveJSON();
-
-});
-
-
-function log(){
-	
-	this.echo('sdfdsfsdf');
-}
-
-//casper.then(function waitLogined() {
-	//this.waitForSelector('div.page.with-side-footer',function(){
-//});	
-
 casper.then(function() {
 	var numTimes = 5000, count = lastindx+1;
 	var x = require('casper').selectXPath;
 	this.echo('Starting..');
 	
-	this.repeat(numTimes, function() {
-		this.echo('----------- count='+count);
-		if (!this.exists('html.js.safari.ovl-fading')){
-			continue;
-			var rating="0";
-			this.echo("Enter profile...");
-			var relogined = this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function intoProfile(){
-				//this.echo('click profile');
-				this.click('span.b-link.js-profile-header-toggle-layout');	// Заходим в профайл
-				//this.echo('Whaiting for profile...');
-				this.waitForSelector('b.scale-value.no-dps',
-					function(){
-						//this.capture('profile='+count+'-profileYes.png');
-						rating=this.fetchText('b.scale-value.no-dps').replace(",",".");
-						//this.echo('Rating= '+rating);
-						if (rating==""){
-							rating=unrated; // 10
-						}
+	this.repeat(100, function() {
+		
+		this.wait(10000,function(){this.echo('----------- count='+count)});
+		this.waitForSelector('div.ovl-frame.js-ovl-wrap',
+			function ifFuckingOverlay(){
+				this.echo('Поебень всплыла от баду , убираем нах...');	
+				this.capture('Overlay10='+count+'.png');
+				var sleep = 6000;
+				if (this.exists(x('//p[text()="Этот аккаунт используется на другом устройстве."]'))) {
+					sleep = 60000;
+					this.echo('Этот аккаунт используется на другом устройстве.='+count);	
+					this.click('span.b-link.js-continue'); // Жмем продолжить
+				}
+				else if (this.exists(x('//p[text()="Время сеанса истекло. Пожалуйста, выполните вход ещё раз."]'))) {
+					sleep = 60000;
+					this.echo('Время сеанса истекло. Пожалуйста, выполните вход ещё раз.'+count);	
+					this.click('span.b-link.js-session-expire'); // Жмем продолжить
+				}
+				//if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
+				else if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
+					this.echo('У вас закончились голоса='+count);	
+					this.echo('Zzzzz... for 60 sec');
+					this.wait(60000,function(){
+						this.click('i.icon.icon--white.js-ovl-close');
+						this.echo('Пиздуем дальше...');
+					});
+				}
+				else if (this.exists(x('//h1[text()="Пусть вас видят чаще"]'))) {
+					this.echo('Пусть вас видят чаще='+count);	
+					this.click('span.p-link.js-ovl-close');
+				}
+				else if (this.exists(x('//p[text()="Вы действительно хотите выйти?"]'))) {
+					this.echo('Вы действительно хотите выйти?='+count);	
+					this.click('span.b-link.js-signout-immediately');
+				}
+				else {
+					// Повысьте свои шансы!
+					// Нравится Badoo?
+					// О Да! Это взаимно :)
+					this.capture('Hren='+count+'.png');
+					this.echo('Прочая поебическая всплывающая хрень от баду='+count);
+					if (this.exists('i.icon.icon--white.js-ovl-close')) {
+						this.click ('i.icon.icon--white.js-ovl-close');
+					} 
+					else if (this.exists('i.icon.icon--grey.js-ovl-close')){
+						this.click      ('i.icon.icon--grey.js-ovl-close');
+					}
+					else {
+						fs.write('ERROR-hren.html', this.getHTML() , 'w');
+						this.echo('[ERROR:]Неопознанная поебическая хрень от баду! See ERROR-hren.html');
+						this.exit();
+					}
+				}
+				this.echo('Zzzzzz... for '+sleep/1000+' seconds');
+				this.wait(sleep,function(){this.echo('Подъем! Пиздуем дальше...')});
+				this.waitWhileVisible('div.ovl-frame.js-ovl-wrap',
+					function() {
+						this.echo('Убрали поебень='+count);
+						this.capture('Disapeared='+count+'.png');
 					},
-					function(){
-						//this.capture('badoo='+count+'-profileNo.png');
-						rating=unrated;//"10";
-						this.echo("No rating");
-						//this.capture("profile_fail="+count+".png");
+					function() {
+						this.echo('[ERROR]: А херня не исчезает!',+count);
+						this.capture('Error10='+count+'.png');
 					},
 					5000
 				);
-				return false;
-			},	function login() {
-					casper.echo('Login...');	
-					this.capture('badoo-10.png');	
-					this.waitForSelector('a.btn.btn--sm.btn--white',function(){
-						this.click('a.btn.btn--sm.btn--white');	// Жмем "Войти"
-					}, function(){
-						this.echo('First')
+				
+			},
+			function ifCleanBadoo(){
+				this.echo('in badoo');
+				if (this.exists('span.b-link.js-profile-header-toggle-layout')) {	// главная-странца 
+					if (!this.exists('div.profile.profile--info.js-profile-layout-container')){	// если не открыт профайл
+						this.echo('click profile button');
+						this.click ('span.b-link.js-profile-header-toggle-layout');	// Заходим в профайл
 					}
+					this.waitForSelector('div.profile.profile--info.js-profile-layout-container',
+						function(){
+							this.echo('profile opened');
+							rating=unrated; 
+							if (this.exists('b.scale-value.no-dps')){
+								rating=this.fetchText('b.scale-value.no-dps').replace(",",".");
+								if (rating==""){
+									rating=unrated; 
+								}
+							}
+							this.echo("rating="+rating);
+							this.capture("./badoo-game/profile=("+rating+")=["+count+"].png");
+							++count;
+							lastindx=count;					
+							saveJSON();
+							if (parseFloat(rating)>minratio){
+								this.echo("click yes");
+								this.click('span[class="b-link js-profile-header-vote"][data-choice="yes"]');
+							}
+							else {
+								this.echo("click no");
+								this.click('span[class="b-link js-profile-header-vote"][data-choice="no"]');
+							}
+						},
+						function(){
+							this.echo("Наверно вылезла поебень");
+						},
+						5000
 					);
-					
-	
-					this.waitForSelector('form', function(){
+				}
+				else if (this.exists('a.btn.btn--sm.btn--white')){	// start page
+					this.echo('Жмем "Войти"')
+					this.click ('a.btn.btn--sm.btn--white');	
+					this.waitForSelector('form.no_autoloader.form.js-signin',function(){
 						this.echo('Authorization...');	
 						this.fill('form.no_autoloader.form.js-signin', {
 							'email': username, 
 							'password': password},
 							true);
-							
-						this.evaluate(function () {
-							$('form.no_autoloader.form.js-signin').submit();
-						});
-					
-					},function(){
-						this.echo('Error: login page not found');
-						this.capture('badoo-00-error.png');
-						this.exit();
+						this.evaluate(function () {$('form.no_autoloader.form.js-signin').submit(); 	});
 					});
-						
-					this.waitUntilVisible('div.big-photo__gallery',function(){
-						this.echo('Ready');
-						this.capture('badoo-01-ready.png');
-					},function(){
-						this.echo('Error Login');
-						this.capture('badoo-00-error.png');
-						this.exit();
-					},15000);
-					
-					this.capture('badoo-11.png');
-					return true;
+				}
+				else {
+					this.echo("[ERROR:]WTF");
+				}
 			},
-			6000
-
-				//this.evaluate(login);
-				//waitLogined();
-				
-			);
-			if (relogined) continue;
-			
-			this.then(function(){
-				this.echo("rating="+rating);
-				//this.echo("profile_OK");
-				lastindx=count;
-				this.capture("./badoo-game/profile=("+rating+")=["+count+"].png");
-				saveJSON();
-				//this.waitForSelector('span.b-link.js-profile-header-vote', 
-				this.waitForSelector('span[class="b-link js-profile-header-vote"]', 
-					function(){
-						if (parseFloat(rating)>minratio){
-							this.echo("click yes")
-							this.click('span[class="b-link js-profile-header-vote"][data-choice="yes"]');
-						}
-						else {
-							this.echo("click no")
-							this.click('span[class="b-link js-profile-header-vote"][data-choice="no"]');
-						}
-						++count;
-						var timeToSleep=10000;
-						if (count%5==0){
-							//timeToSleep=10000*100;	
-							this.echo('Logout');
-							//this.echo('buy');
-							//this.exit();
-							//this.click('i.icon.icon--grey.sidebar__el-hidden.sidebar-nav__signout');
-							this.mouse.move('div.brick.brick--hover');
-							this.waitUntilVisible('span.b-link.js-signout-overlay', function(){
-								this.echo('visible')
-								this.click('span.b-link.js-signout-overlay');
-							});
-
-						}
-						this.echo(timeToSleep/1000+' sec Zzzzzzz...');
-						this.wait(timeToSleep,function(){
-							//this.echo('Wakeup...');
-						});
-					},
-					function(){
-						this.echo('No like button...');
-					},
-					5000
-				);
-			});
-		}
-		// Если есть оверлей
-		else {
-			this.echo('Overlay detected='+count);	
-			this.capture('Overlay10='+count+'.png');
-			this.waitForSelector('div.ovl-frame.js-ovl-wrap',
-				function() {
-					if (this.exists(x('//p[text()="Этот аккаунт используется на другом устройстве."]'))) {
-						--count;
-						this.echo('Этот аккаунт используется на другом устройстве.='+count);	
-						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						this.wait(600000,
-							function(){	
-								this.echo('Жмем продолжить...');	
-								this.click('span.b-link.js-continue'); // Жмем продолжить
-							}
-						);
-					}
-					else if (this.exists(x('//p[text()="Время сеанса истекло. Пожалуйста, выполните вход ещё раз."]'))) {
-						--count;
-						this.echo('Время сеанса истекло. Пожалуйста, выполните вход ещё раз.'+count);	
-						this.echo('ZZZzzzzz....1 min, --count='+count);	
-						//novoice=true;
-						
-						this.wait(60000,
-							function(){	
-								this.echo('Жмем продолжить...');	
-								this.click('span.b-link.js-session-expire'); // Жмем продолжить
-							}
-						);
-					}
-					//if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
-					else if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
-						--count;
-						this.echo('У вас закончились голоса='+count);	
-						this.echo('ZZZzzzzz....10 min, --count='+count);	
-						this.wait(600000,
-							function(){	
-								this.click('i.icon.icon--white.js-ovl-close');
-							}
-						);
-					}
-					else if (this.exists(x('//h1[text()="Пусть вас видят чаще"]'))) {
-						--count;
-						this.echo('Пусть вас видят чаще='+count);	
-						this.click('span.p-link.js-ovl-close');
-					}
-					else if (this.exists(x('//p[text()="Вы действительно хотите выйти?"]'))) {
-						//--count;
-						this.echo('Вы действительно хотите выйти?='+count);	
-						this.click('span.b-link.js-signout-immediately');
-					}
-					else {
-						// Повысьте свои шансы!
-						// Нравится Badoo?
-						// О Да! Это взаимно :)
-						this.capture('Hren='+count+'.png');
-						this.echo('Какая то хрень ='+count);
-						if (this.exists('i.icon.icon--white.js-ovl-close')) {
-							this.click ('i.icon.icon--white.js-ovl-close');
-						} 
-						else if (this.exists('i.icon.icon--grey.js-ovl-close')){
-							this.click      ('i.icon.icon--grey.js-ovl-close');
-						}
-						else {
-							fs.write('ERROR-hren.html', this.getHTML() , 'w');
-							this.echo('И эта хрень неизличима! See ERROR-hren.html');
-						}
-					}	
-				},
-				function() {
-					
-				},
-				3002
-			);
-			
-			this.waitWhileVisible('div.ovl-frame.js-ovl-wrap',
-				function() {
-					this.echo('Overlay Disapeared='+count);
-					this.capture('Disapeared='+count+'.png');
-					this.wait(2000,function(){'Sleep after disapeared'});
-				},
-				function() {
-					this.echo('[PROBLEM]: А херня не исчезает!',+count);
-					this.capture('Error10='+count+'.png');
-				},
-				10000
-			);
-		}
-		//this.echo("End repeat");
-		
+			1000
+		)
 	});
-	
 });
-
 casper.run();
 
-
-//	//<span class="p-link js-ovl-close">Нет, спасибо</span>
-			//	if (this.exists('span.p-link.js-ovl-close')) {
-			//		if (this.exists(x('//span[text()="Нет, спасибо"]'))) {
-			//			this.echo('Нет, спасибо='+count);	
-			//			this.click('span.p-link.js-ovl-close');
-			//			this.waitUntilVisible('span.p-link.js-ovl-close', function() {
-			//				this.echo('Нет, спасибо Disapeared!');
-			//			});
-            //
-			//			//this.wait(3000,function(){
-			//			//	this.echo('Closed ovl in 3 sec');	
-			//			//});
-			//		}
-			//	}
-            //
-			//	if (this.exists('i.icon.icon--white.js-ovl-close')) {
-			//		if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
-			//			this.echo('У вас закончились голоса='+count);	
-			//			this.echo('ZZZzzzzz....10 min');	
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//				this.wait(600000,function(){
-			//				this.echo('Closed ovl in 10 min');	
-			//			});
-			//		}
-			//		// <h1>Повысьте свои шансы!</h1>
-			//		else if (this.exists(x('//h1[text()="Повысьте свои шансы!"]'))) {
-			//			this.echo('Повысьте свои шансы! ='+count);	
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//		}
-			//		else {
-			//			this.echo('У вас какая то хрень='+count);
-			//			this.click('i.icon.icon--white.js-ovl-close');
-			//		}
-			//		this.wait(3000,function(){
-			//			this.echo('Closed ovl in 3 sec');	
-			//		});
-			//	}
-            //
-			//	//<div class="btn btn--blue"> 
-			//	//	<span class="btn-txt">Продолжить</span> 
-			//	//	<span class="b-link js-continue"></span> 
-			//	//</div>
-			//	
-		    //
-			//	//this.waitForSelector('i.icon.icon--white.js-ovl-close', 
-			//	//	function(){
-			//	//		this.capture('overlay='+count+'.png');
-			//	//		var x = require('casper').selectXPath;
-			//	//		
-			//	//		if (this.exists(x('//p[text()="У вас закончились голоса. Хотите проголосовать ещё 600 раз сегодня?"]'))) {
-			//	//			this.echo('У вас закончились голоса='+count);	
-			//	//			this.echo('ZZZzzzzz....');	
-			//	//			this.wait(60000,function(){
-			//	//				this.echo('Wake up!');	
-			//	//			});
-			//	//		}
-			//	//		else {
-			//	//			this.echo('У вас какая то хрень='+count);
-			//	//		}
-			//	//		this.click('i.icon.icon--white.js-ovl-close');
-			//	//		//this.echo('Повысьте свои шансы! '+count);
-			//	//	}, 
-			//	//	function (){
-			//	//		this.echo('I like '+count);
-			//	//		this.capture('badoo='+count+'.png');
-			//	//		this.click('span.b-link.js-profile-header-vote');
-			//	//		++count;
-			//	//		//this.echo('my timeout');
-			//	//	},1000);
-			//	////this.echo('end wait for overlay..');
-			//	//else {
-			//	//}
-			//});
-			//this.then(function() {
-			//	this.capture('badoo='+count+'.png');
-			//	this.echo('I like '+count);
-			//	this.capture('badoo='+count+'.png');
-			//	this.click('span.b-link.js-profile-header-vote');
-			//	++count;
-			//});
-			//this.echo('end wait for love..');
-			
-//			<div class="ovl-frame js-ovl-wrap"><div class="js-ovl-content"> <div class="ovl-body"> <div class="ovl-content">  <h1>Нравится Badoo?</h1> <p> Поставьте нам хорошую оценку :)          </p>   <div class="stars">  <i class="stars__star js-star" data-star-value="1"></i>  <i class="stars__star js-star" data-star-value="2"></i>  <i class="stars__star js-star" data-star-value="3"></i>  <i class="stars__star js-star" data-star-value="4"></i>  <i class="stars__star js-star" data-star-value="5"></i>  <span class="blocker"></span> </div> </div> <div class="ovl-close"><i class="icon icon--grey js-ovl-close"><svg class="icon-svg"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cross"></use></svg></i></div> <div class="blocker blocker--light"></div> </div> </div><div class="loader loader--lg loader--black ovl-frame-loader"><span class="loader_"></span></div></div>
-			
