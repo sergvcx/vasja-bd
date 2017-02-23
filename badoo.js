@@ -1,4 +1,5 @@
 //phantom.injectJs('settings.js');
+
 var casper = require('casper').create();
 var json = require('badoo.json');
 //require('utils').dump(json);
