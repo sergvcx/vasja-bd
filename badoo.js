@@ -11,6 +11,7 @@ var unrated =json['unrated'];
 var fs     = require('fs');
 
 function saveJSON(){
+	//this.echo('[saveJSON]'); DO NOT ECHO IN FUNCTION!!!
 	//casper.echo('save to JSON...');
 	var jsonStr = "{\n";
 	jsonStr+= '"username":"'+username+"\",\n";
@@ -32,29 +33,34 @@ function saveJSON(){
 casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X)');
 //casper.userAgent('Mozilla/6.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 casper.start('http://badoo.com', function() {
+	this.echo('[start]');
 	phantom.outputEncoding="cp866";
     this.echo(this.getTitle());
-	this.capture('badoo-start.png');
+	this.capture('badoo-00000.png');
 });
 
 
 
-casper.then(function() {
+casper.then(function A() {
+	this.echo('[A-Enter]');
 	this.capture('badoo-00.png');
-	this.click('a.btn.btn--sm.btn--white');
-	this.capture('badoo-01.png');
+	this.waitForSelector('a.btn.btn--sm.btn--white',function(){
+		this.click('a.btn.btn--sm.btn--white');
+		this.capture('badoo-01.png');
+	});
 	
 	//lastindx+=1;
-	//saveJSON();
+	saveJSON();
 
 });
 
 
 
 
-casper.then(function() {
+casper.then(function Login() {
 	//this.echo('[01] Waiting for login...');
-	this.capture('badoo-10.png');
+	this.echo('[B-Login]');
+	this.capture('badoo-B10.png');
 	//*[@id="anketa"]
 	//test.assertExists('form[id="anketa"]', "main form is found");
 	//this.fill('form[id="anketa"]', {
@@ -81,49 +87,58 @@ casper.then(function() {
 	
 	
 	this.waitForSelector('form', function(){
+		this.echo(' Form detected. Logining... ');
 		this.fill('form.no_autoloader.form.js-signin', {
 			'email': username, 
 			'password': password},
 			true);
 	});
-		
-	this.capture('badoo-11.png');
-	
-	//this.click('input.button.login');
-	
-	//#dlg_login > ul.reset.line.lab_w43 > li:nth-child(4) > div > button
-	
 	
 });
 
-casper.then(function() {
-	this.echo('submit');
+casper.then(function Submit() {
+	this.echo('[C-Submit]');
+	this.capture('badoo-C10.png');
 	this.evaluate(function () {
+		this.echo('submit...');
         $('form.no_autoloader.form.js-signin').submit();
     });
-	
-	
-	this.capture('badoo-20.png');
-
 });	
 
-casper.then(function() {
-	
+casper.then(function Sleep(){
+	this.echo('[D-Sleep]');
+	this.capture('badoo-D10.png');
 	//body > div.height_full > div.head > div > ul > li:nth-child(1) > a
-	
-	this.echo('preexit');
-	this.wait(10000,function(){
-		this.echo('exit');
-		this.capture('badoo-exit.png');
-	});
+	//this.wait(2000,function(){
+	//	this.echo(' exit');
+	//	this.capture('badoo-D99.png');
+	//});
 	//this.waitForSelector('div.height_full', function(){
 	//	this.echo('exit');
 	//	this.capture('badoo-30.png');
 	//});
+	// Ждем входа 
+	//this.waitForSelector('span.b-link.js-sidebar-popularity-link', function(){
+	//this.waitUtilVisible('span.photo-gallery__link.photo-gallery__link--next.js-gallery-next',  function(){
+	this.waitForSelector('div.photo-gallery',  function(){
+		this.echo(' Succesfully!');
+		this.capture('badoo-30.png');
+	}, function() {
+		this.echo(' Error!');
+		this.capture('error-D10.png');
+		this.wait(2000,function(){
+			this.echo(' exit');
+			this.capture('error-exit.png');
+			this.exit();
+		});
+	},10000);
+	
 });	
 
-casper.then(function() {
-	var numTimes = 5000, count = lastindx+1;
+casper.then(function main() {
+	this.echo('[E-main]');
+	this.capture('badoo-E10.png');
+	var numTimes = 6, count = lastindx+1;
 	var x = require('casper').selectXPath;
 	this.echo('..');
 	//this.waitTimeOut(2000);
@@ -131,6 +146,7 @@ casper.then(function() {
 	this.repeat(numTimes, function() {
 		this.echo('----------- count='+count);
 		if (!this.exists('html.js.safari.ovl-fading')){
+			this.echo('[E-1]');
 			var rating="0";
 			//this.echo("Enter profile...");
 			this.waitForSelector('span.b-link.js-profile-header-toggle-layout', function(){
@@ -141,7 +157,7 @@ casper.then(function() {
 					function(){
 						//this.capture('profile='+count+'-profileYes.png');
 						rating=this.fetchText('b.scale-value.no-dps').replace(",",".");
-						//this.echo('Rating= '+rating);
+						this.echo(' Profile rating= '+rating);
 						if (rating==""){
 							rating=unrated; // 10
 						}
@@ -149,50 +165,59 @@ casper.then(function() {
 					function(){
 						//this.capture('badoo='+count+'-profileNo.png');
 						rating=unrated;//"10";
-						this.echo("No rating");
+						this.echo(" No profile rating");
 						//this.capture("profile_fail="+count+".png");
 					},
-					5000
+					5001
 				);
-			});
+			},
+			function TimeOut(){
+				this.echo('[ E-TimeOut]');
+				this.capture('error-E-TimeOut.png');
+				fs.write('ERROR-E.html', this.getHTML() , 'w');
+				//this.exit();
+			},
+			5003
+			);
 			this.then(function(){
-				this.echo("rating="+rating);
+				this.echo(" Using rating="+rating);
 				//this.echo("profile_OK");
 				lastindx=count;
-				this.capture("./badoo-game/profile=("+rating+")=["+count+"].png");
+				this.capture("e:/kitchen/badoo-game/profile=("+rating+")=["+count+"].png");
 				saveJSON();
 				//this.waitForSelector('span.b-link.js-profile-header-vote', 
 				this.waitForSelector('span[class="b-link js-profile-header-vote"]', 
 					function(){
 						if (parseFloat(rating)>minratio){
-							this.echo("click yes")
+							this.echo(" click yes")
 							this.click('span[class="b-link js-profile-header-vote"][data-choice="yes"]');
 						}
 						else {
-							this.echo("click no")
+							this.echo(" click no")
 							this.click('span[class="b-link js-profile-header-vote"][data-choice="no"]');
 						}
 						++count;
 						var timeToSleep=10000;
-						if (count%10==0){
-							timeToSleep=10000*100;	
-						}
+						//if (count%10==0){
+						//	timeToSleep=10000*100;	
+						//}
 						this.echo(timeToSleep/1000+' sec Zzzzzzz...');
 						this.wait(timeToSleep,function(){
 							//this.echo('Wakeup...');
 						});
 					},
 					function(){
-						this.echo('No like button...');
+						this.echo(' No like button...');
 					},
-					5000
+					5002
 				);
 			});
 		}
 		else {
-			this.echo('Overlay detected='+count);	
+			this.echo(' Overlay detected='+count);	
 			this.capture('Overlay10='+count+'.png');
-			this.waitForSelector('div.ovl-frame.js-ovl-wrap',
+			//this.waitForSelector('section.ovl-frame.js-ovl-wrap', тут  был div теперь section
+			this.waitForSelector('section.ovl-frame.js-ovl-wrap',
 				function() {
 					if (this.exists(x('//p[text()="Этот аккаунт используется на другом устройстве."]'))) {
 						--count;
@@ -200,20 +225,20 @@ casper.then(function() {
 						this.echo('ZZZzzzzz....10 min, --count='+count);	
 						this.wait(600000,
 							function(){	
-								this.echo('Жмем продолжить...');	
+								this.echo(' Жмем продолжить...');	
 								this.click('span.b-link.js-continue'); // Жмем продолжить
 							}
 						);
 					}
 					else if (this.exists(x('//p[text()="Время сеанса истекло. Пожалуйста, выполните вход ещё раз."]'))) {
 						--count;
-						this.echo('Время сеанса истекло. Пожалуйста, выполните вход ещё раз.'+count);	
-						this.echo('ZZZzzzzz....1 min, --count='+count);	
+						this.echo(' Время сеанса истекло. Пожалуйста, выполните вход ещё раз.'+count);	
+						this.echo(' ZZZzzzzz....1 min, --count='+count);	
 						//novoice=true;
 						
 						this.wait(60000,
 							function(){	
-								this.echo('Жмем продолжить...');	
+								this.echo(' Жмем продолжить...');	
 								this.click('span.b-link.js-session-expire'); // Жмем продолжить
 							}
 						);
@@ -253,14 +278,14 @@ casper.then(function() {
 					}	
 				},
 				function() {
-					
+					this.echo(' Чо то непонятное');
 				},
 				3002
 			);
 			
 			this.waitWhileVisible('div.ovl-frame.js-ovl-wrap',
 				function() {
-					this.echo('Overlay Disapeared='+count);
+					this.echo(' Overlay Disapeared='+count);
 					this.capture('Disapeared='+count+'.png');
 					this.wait(2000,function(){'Sleep after disapeared'});
 				},
