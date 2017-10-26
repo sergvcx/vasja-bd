@@ -9,7 +9,7 @@ var password=json['password'];
 var minratio=json['minratio'];
 var lastindx=json['lastindx'];
 var unrated =json['unrated'];
-
+var profile_dir=json['profile_dir'];
 var fs     = require('fs');
 
 function saveJSON(){
@@ -20,7 +20,8 @@ function saveJSON(){
 	jsonStr+= '"password":"'+password+"\",\n";
 	jsonStr+= '"minratio":'+minratio+",\n";
 	jsonStr+= '"unrated":'+unrated+",\n";
-	jsonStr+= '"lastindx":'+lastindx+" \n";
+	jsonStr+= '"lastindx":'+lastindx+",\n";
+	jsonStr+= '"profile_dir":"'+profile_dir+"\"\n";
 	jsonStr+= '}';
 	fs.write('badoo.json', jsonStr, 'w');
 	
@@ -46,8 +47,9 @@ casper.start('http://badoo.com', function() {
 casper.then(function A() {
 	this.echo('[A-Enter]');
 	this.capture('badoo-00.png');
-	this.waitForSelector('a.btn.btn--sm.btn--white',function(){
-		this.click('a.btn.btn--sm.btn--white');
+	//this.waitForSelector('a.btn.btn--sm.btn--white',function(){
+	this.waitForSelector('a.btn.btn--xsm.btn--glass',function(){
+		this.click('a.btn.btn--xsm.btn--glass');
 		this.capture('badoo-01.png');
 	});
 	
@@ -55,8 +57,6 @@ casper.then(function A() {
 	saveJSON();
 
 });
-
-
 
 
 casper.then(function Login() {
@@ -87,8 +87,9 @@ casper.then(function Login() {
 	//});
 	//this.echo('I am out of selector');
 	
-	
-	this.waitForSelector('form', function(){
+	//no_autoloader form js-signin
+	//this.waitForSelector('form', function(){
+	this.waitForSelector('form.no_autoloader.form.js-signin', function(){
 		this.echo(' Form detected. Logining... ');
 		this.fill('form.no_autoloader.form.js-signin', {
 			'email': username, 
@@ -128,12 +129,12 @@ casper.then(function Sleep(){
 	}, function() {
 		this.echo(' Error!');
 		this.capture('error-D10.png');
-		this.wait(2000,function(){
+		this.wait(8000,function(){
 			this.echo(' exit');
 			this.capture('error-exit.png');
 			this.exit();
 		});
-	},10000);
+	},20000);
 	
 });	
 
@@ -185,7 +186,7 @@ casper.then(function main() {
 				this.echo(" Using rating="+rating);
 				//this.echo("profile_OK");
 				lastindx=count;
-				this.capture("e:/kitchen/badoo-game/profile=("+rating+")=["+count+"].png");
+				this.capture(profile_dir+"=("+rating+")=["+count+"].png");
 				saveJSON();
 				//this.waitForSelector('span.b-link.js-profile-header-vote', 
 				this.waitForSelector('span[class="b-link js-profile-header-vote"]', 
