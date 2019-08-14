@@ -1,8 +1,8 @@
 
 //phantom.injectJs('settings.js');
 
-var casper = require('casper').create();
-var json = require('badoo.json');
+var casper 	= require('casper').create();
+var json 	= require('badoo.json');
 //require('utils').dump(json);
 var username=json['username'];
 var password=json['password'];
@@ -95,6 +95,7 @@ casper.then(function Login() {
 			'email': username, 
 			'password': password},
 			true);
+		this.echo('form is filled');
 	});
 	
 });
@@ -108,18 +109,9 @@ casper.then(function Submit() {
     });
 });	
 
-casper.then(function Sleep(){
-	this.echo('[D-Sleep]');
+casper.then(function WaitingForEnter(){
+	this.echo('[D-Waiting For Enter...]');
 	this.capture('badoo-D10.png');
-	//body > div.height_full > div.head > div > ul > li:nth-child(1) > a
-	//this.wait(2000,function(){
-	//	this.echo(' exit');
-	//	this.capture('badoo-D99.png');
-	//});
-	//this.waitForSelector('div.height_full', function(){
-	//	this.echo('exit');
-	//	this.capture('badoo-30.png');
-	//});
 	// Ждем входа 
 	//this.waitForSelector('span.b-link.js-sidebar-popularity-link', function(){
 	//this.waitUtilVisible('span.photo-gallery__link.photo-gallery__link--next.js-gallery-next',  function(){
@@ -135,7 +127,6 @@ casper.then(function Sleep(){
 			this.exit();
 		});
 	},20000);
-	
 });	
 
 casper.then(function main() {
