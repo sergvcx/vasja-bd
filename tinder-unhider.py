@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
  
+ 
 driver = webdriver.Firefox()
 #driver = webdriver.Chrome()
 #driver.implicitly_wait(10) # seconds
@@ -39,6 +40,10 @@ print(element.text)
 #element.send_keys(Keys.RETURN)
 
 time.sleep(30)
+
+all_cookies = driver.get_cookies()
+print("cookies=",all_cookies)
+
 #element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[1]/div/aside/nav/div/div/div/div[2]/div[1]/div[1]/div[1]/a/div/div[2]/div")))
 element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XPATH, " /html/body/div[1]/div/div[1]/div/aside/nav/div/div/div/div[2]/div[1]/div[1]/div[1]/a/div/div[2]")))
 #element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.CLASS_NAME, "StretchedBox.CenterAlign")))
@@ -47,6 +52,8 @@ element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XP
 print(element)
 print(element.text)
 element.click()
+
+
 
 
 element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.CLASS_NAME, "Expand.enterAnimationContainer")))
@@ -126,15 +133,15 @@ for e in elements:
 #while 1:
 #	time.sleep(dt);		
 #	page= driver.page_source
-#	ret=page.find("в сети")
-#	#ret=page.find("данные контакта")
+#	ret=page.find("")
+#	#ret=page.find("")
 #	if ret>0:
 #		start_online =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 #		while 1:
 #			time.sleep(dt);		
 #			page= driver.page_source
-#			#ret=page.find("данные контакта")
-#			ret=page.find("в сети")
+#			#ret=page.find("")
+#			ret=page.find("")
 #			total_online = total_online+dt;
 #			if ret==-1:
 #				stop_online =  datetime.datetime.now().strftime("%H:%M:%S")
