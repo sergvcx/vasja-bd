@@ -35,8 +35,8 @@ element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPAT
 #element = driver.find_element_by_xpath('/html/body/div[2]/div/div/div[2]/div[2]/div/input')
 print(element)
 print(element.text)
-element.send_keys("9265330272")
-element.send_keys(Keys.RETURN)
+#element.send_keys("")
+#element.send_keys(Keys.RETURN)
 
 time.sleep(30)
 #element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[1]/div/aside/nav/div/div/div/div[2]/div[1]/div[1]/div[1]/a/div/div[2]/div")))
