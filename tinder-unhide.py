@@ -72,7 +72,7 @@ driver.get("https://tinder.com/")
 #element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div[2]/div[2]/div/input")))
 #element = driver.find_element_by_xpath('/html/body/div[2]/div/div/div[2]/div[2]/div/input')
 #print(element.text)
-#element.send_keys("9265330272")
+#element.send_keys("")
 #element.send_keys(Keys.RETURN)
 #time.sleep(30)
 
@@ -85,20 +85,20 @@ driver.get("https://tinder.com/")
 print("======= open hidden pics =================================")
 #element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div[1]/div/aside/nav/div/div/div/div[2]/div[1]/div[1]/div[1]/a/div/div[2]/div")))
 #element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.XPATH, " /html/body/div[1]/div/div[1]/div/aside/nav/div/div/div/div[2]/div[1]/div[1]/div[1]/a/div/div[2]")))
+time.sleep(2)
 element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.CLASS_NAME, "StretchedBox.CenterAlign")))
 
 #element = driver.find_element_by_xpath('/html/body/div[2]/div/div/div[2]/div[2]/div/input')
 print(element)
 print(element.text)
+time.sleep(2)
+#print("******* click ")
 element.click()
 
 
-#https://tinder.com/app/likes-you
-#https://tinder.com/app/likes-you
-
 element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.CLASS_NAME, "Expand.enterAnimationContainer")))
-print(element)
-print(element.text)
+#print(element)
+#print(element.text)
 
 #element = driver.find_element_by_xpath('//*[@id="content"]/div/div[1]/div/main/div[1]/div/div/div[2]/div')
 #element.send_keys(Keys.PAGE_DOWN)
@@ -110,11 +110,8 @@ i=0
 
 
 
-print("start scrool")
-
-driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-time.sleep(5)
-
+#print("start scrool")
+#time.sleep(5)
 #driver.switch_to.frame(driver.find_element_by_css_selector("frame[name='nav']"))
 
 for e in elements:
@@ -128,17 +125,21 @@ for e in elements:
 	#print("pic class=",pic.get_attribute("class"))
 	#print("pic style=",pic.get_attribute("style"))
 	#print("pic text=",pic.get_attribute("href"))
+	#driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+	pic.location_once_scrolled_into_view
+	#time.sleep(1)
+	print("*****************",i)
 	style=pic.get_attribute("style")
-	print("style=",i,style)
+	#print("style=",i,style)
 	ss=re.split("\"",style)
-	print(ss, len(ss))
-	if (len(ss)>0):
-		url=ss[1]
-		print(url)
-		urllib.request.urlretrieve(url, str(i)+".jpg")
+	#print(ss, len(ss))
+	#f (len(ss)>0):
+	url=ss[1]
+	print(url)
+	urllib.request.urlretrieve(url, str(i)+".jpg")
 	i=i+1
 
-
+driver.quit()
 
 
 
