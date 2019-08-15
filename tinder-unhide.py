@@ -43,40 +43,40 @@ driver.get("https://tinder.com/")
 #driver.refresh()	
 #time.sleep(5)
 #element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div[3]/div[1]/button/span")))
-print("======== log in ================================")
+#print("======== log in ================================")
 #element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1)' and contains(text(), 'Log in')]")))
-element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1)']")))
+#element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1)']")))
 
-time.sleep(5)
-driver.refresh();
+#time.sleep(5)
+#driver.refresh();
 #exit();
-time.sleep(5)
+#time.sleep(5)
 
 #element = WebDriverWait(driver, 5).until(EC.text_to_be_present_in_element("Log in"))
 #element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'button__text.Pos(r).Z(1).D(ib)')))
 #element = driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/div/main/div[1]/div/div/div[1]/div[1]/div[2]/div/button/span/span')
-print("text=",element.text)
-print("class=",element.get_attribute("class"))
-element.click();
+#print("text=",element.text)
+#print("class=",element.get_attribute("class"))
+#element.click();
 
-print("====== login by phone number ==================================")
+#print("====== login by phone number ==================================")
 #element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div[3]/div[1]/button/span/span")))
 #element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1) D(ib)' and contains(text(), 'Log in with phone number')]")))
-element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1) D(ib)']")))
-print(element.text)
-element.click();
+#element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//span[@class='button__text Pos(r) Z(1) D(ib)']")))
+#print(element.text)
+#element.click();
 
 
-print("======= enter phone number =================================")
+#print("======= enter phone number =================================")
 #time.sleep(5)
-element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div[2]/div[2]/div/input")))
+#element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div[2]/div[2]/div/input")))
 #element = driver.find_element_by_xpath('/html/body/div[2]/div/div/div[2]/div[2]/div/input')
-print(element.text)
-element.send_keys("9265330272")
-element.send_keys(Keys.RETURN)
-time.sleep(30)
+#print(element.text)
+#element.send_keys("9265330272")
+#element.send_keys(Keys.RETURN)
+#time.sleep(30)
 
-print("======= save coockies =================================")
+#print("======= save coockies =================================")
 #all_cookies = driver.get_cookies()
 #pickle.dump(all_cookies, open("tinder2.pkl","wb"))
 #print("cookies=",all_cookies)
@@ -102,6 +102,10 @@ elements = driver.find_elements_by_class_name('Expand.enterAnimationContainer')
 i=0
 
 
+print("start scrool")
+
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+time.sleep(5)
 
 
 for e in elements:
