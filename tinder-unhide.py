@@ -93,13 +93,21 @@ print(element.text)
 element.click()
 
 
-
+#https://tinder.com/app/likes-you
+#https://tinder.com/app/likes-you
 
 element = WebDriverWait(driver, 200).until(EC.presence_of_element_located((By.CLASS_NAME, "Expand.enterAnimationContainer")))
 print(element)
 print(element.text)
+
+#element = driver.find_element_by_xpath('//*[@id="content"]/div/div[1]/div/main/div[1]/div/div/div[2]/div')
+#element.send_keys(Keys.PAGE_DOWN)
+
+
+
 elements = driver.find_elements_by_class_name('Expand.enterAnimationContainer')
 i=0
+
 
 
 print("start scrool")
@@ -107,6 +115,7 @@ print("start scrool")
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 time.sleep(5)
 
+#driver.switch_to.frame(driver.find_element_by_css_selector("frame[name='nav']"))
 
 for e in elements:
 	#print("e e=",e)
