@@ -23,7 +23,7 @@ from selenium.webdriver.chrome.options import Options
 #driver = webdriver.Chrome(options=chrome_options)
 #chrome_options.add_argument("user-data-dir=chrome-data") 
 chrome_options = Options()
-chrome_options.add_argument("--user-data-dir=chrome-data")
+chrome_options.add_argument("--user-data-dir=chrome-data8881")
 driver = webdriver.Chrome('chromedriver.exe',options=chrome_options)
 #chrome_options.add_argument("user-data-dir=chrome-data") 
 driver.get("https://tinder.com/")
